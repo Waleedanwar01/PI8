@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: quotes_insurance
+    runtime: python
+    buildCommand: ./build.sh
+    startCommand: gunicorn quotes_insurance.wsgi:application
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 2

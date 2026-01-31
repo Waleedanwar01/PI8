@@ -50,14 +50,14 @@ def get_fake_hero_image_url(title, slug, pk=None):
     
     for key, img_id in keywords.items():
         if key in text:
-            return f"https://images.unsplash.com/photo-{img_id}?auto=format&fit=crop&w=1920&q=80"
+            return f"https://images.unsplash.com/photo-{img_id}?auto=format&fit=crop&w=1200&q=75"
     
     if pk:
         img_id = defaults[pk % len(defaults)]
     else:
         img_id = random.choice(defaults)
         
-    return f"https://images.unsplash.com/photo-{img_id}?auto=format&fit=crop&w=1920&q=80"
+    return f"https://images.unsplash.com/photo-{img_id}?auto=format&fit=crop&w=1200&q=75"
 
 
 class SiteConfig(models.Model):

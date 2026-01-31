@@ -137,6 +137,7 @@
                     <img src="{{ service.get_hero_image_url }}"
                          alt="{{ service.title }}"
                          class="w-full h-full object-cover"
+                         loading="lazy"
                          onerror="this.onerror=null; this.src='https://picsum.photos/seed/{{ service.id }}/800/600';">
                 </div>
                 <div class="p-6 flex flex-col flex-1">

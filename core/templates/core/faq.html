@@ -1,0 +1,65 @@
+{% extends 'core/base.html' %}
+
+{% block head_title %}
+	<title>{{ item.title }} | {{ site_config.site_name|default:"Quotes Insurance" }}</title>
+{% endblock %}
+
+{% block content %}
+<div class="relative h-[420px] w-full bg-cover bg-center" style="background-image: url('{{ item.get_hero_image_url }}');">
+    <div class="absolute inset-0 bg-black bg-opacity-50 bg-gradient-to-r from-black/70 to-transparent"></div>
+    <div class="relative z-10 h-full container mx-auto px-6 lg:px-12 flex items-center">
+        <div class="max-w-2xl">
+            <nav class="flex text-xs text-gray-300 mb-4 uppercase tracking-wider font-semibold">
+                <a href="/" class="hover:text-white transition">Home</a>
+                <span class="mx-2">/</span>
+                <span class="text-white">FAQ</span>
+            </nav>
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight drop-shadow-lg">
+                {{ item.hero_title }}
+            </h1>
+            <p class="text-gray-200 text-lg md:text-xl font-light leading-relaxed">
+                {{ item.hero_subtitle }}
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="container mx-auto px-6 lg:px-12 py-16">
+    <div class="max-w-4xl mx-auto space-y-12">
+        {% if categories %}
+            {% for category in categories %}
+            <div class="bg-white rounded-none shadow-lg border border-gray-100 overflow-hidden">
+                <div class="bg-gray-50 border-b border-gray-100 p-6">
+                    <h2 class="text-2xl font-bold text-[#111827] flex items-center gap-3">
+                        <span class="w-2 h-8 bg-[#FBB03B] block rounded-sm"></span>
+                        {{ category.name }}
+                    </h2>
+                </div>
+                
+                <div class="p-6 md:p-8 space-y-4">
+                    {% for faq in category.items.all %}
+                        {% if faq.is_active %}
+                        <div x-data="{ open: false }" class="border border-gray-200 rounded-none bg-white">
+                            <button @click="open = !open" class="flex justify-between items-center w-full p-4 text-left hover:bg-gray-50 transition-colors focus:outline-none">
+                                <span class="font-bold text-gray-800 text-lg">{{ faq.question }}</span>
+                                <svg class="w-5 h-5 text-gray-500 transform transition-transform duration-200" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div x-show="open" x-collapse class="p-4 pt-0 text-gray-600 prose max-w-none border-t border-gray-100">
+                                <div class="mt-4">{{ faq.answer|safe }}</div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="text-center py-20 bg-gray-50 rounded border border-dashed border-gray-300">
+                <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">No FAQs Available Yet</h3>
+                <p class="text-gray-500">Please check back later for updates.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

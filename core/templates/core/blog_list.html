@@ -1,0 +1,80 @@
+
+{% extends 'core/base.html' %}
+
+{% block head_title %}
+    <title>Blog - {{ item.hero_title }} | {{ site_config.site_name|default:"Quotes Insurance" }}</title>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="relative min-h-[500px] w-full bg-[#111827] overflow-hidden flex items-center">
+    <div class="absolute inset-0 bg-gradient-to-br from-gray-900 via-[#1a1a1a] to-gray-800 z-0"></div>
+    <div class="absolute inset-0 w-full h-full bg-cover bg-center opacity-40 z-0" style="background-image: url('{{ item.get_hero_image_url }}');"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-[#111827] via-[#111827]/80 to-transparent z-0"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 lg:px-8 w-full">
+        <div class="max-w-3xl">
+            <nav class="flex text-xs text-gray-300 mb-4 uppercase tracking-wider font-semibold">
+                <a href="/" class="hover:text-white transition">Home</a>
+                <span class="mx-2">/</span>
+                <span class="text-white">Blog</span>
+            </nav>
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+                {{ item.hero_title }}
+            </h1>
+            <p class="text-gray-200 text-lg md:text-xl font-light leading-relaxed">
+                {{ item.hero_subtitle }}
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="container mx-auto px-6 lg:px-12 py-16">
+    <div class="max-w-7xl mx-auto">
+        <!-- Main Content -->
+        <div class="space-y-12">
+            {% if posts %}
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    {% for post in posts %}
+                    <article class="bg-white shadow-lg border border-gray-100 flex flex-col h-full group transition hover:shadow-xl">
+                        <a href="{% url 'blog_detail' post.slug %}" class="h-56 overflow-hidden block relative">
+                            <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition z-10"></div>
+                            <img src="{{ post.get_image_url }}" onerror="this.onerror=null;this.src='/media/hero/taxi.jpg';" alt="{{ post.title }}" class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500">
+                        </a>
+                        
+                        <div class="p-6 flex-1 flex flex-col">
+                            <div class="flex items-center text-xs text-gray-500 mb-3 space-x-2">
+                                <span>{{ post.created_at|date:"F j, Y" }}</span>
+                                {% if post.category %}
+                                <span class="text-gray-300">|</span>
+                                <span class="text-[#8B183F] font-semibold">{{ post.category.name }}</span>
+                                {% endif %}
+                            </div>
+                            
+                            <h2 class="text-xl font-bold text-[#111827] mb-3 leading-tight group-hover:text-[#8B183F] transition">
+                                <a href="{% url 'blog_detail' post.slug %}">{{ post.title }}</a>
+                            </h2>
+                            
+                            <div class="text-gray-600 text-sm mb-4 line-clamp-3">
+                                {{ post.content|striptags|truncatewords:20 }}
+                            </div>
+                            
+                            <div class="mt-auto pt-4 border-t border-gray-100">
+                                <a href="{% url 'blog_detail' post.slug %}" class="text-sm font-bold text-[#8B183F] hover:text-[#111827] transition uppercase tracking-wider flex items-center group/link">
+                                    Read Article 
+                                    <svg class="w-4 h-4 ml-2 transform group-hover/link:translate-x-1 transition-transform" style="width: 16px; height: 16px; min-width: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-20 bg-gray-50 border border-gray-100">
+                    <p class="text-xl text-gray-500">No blog posts found.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

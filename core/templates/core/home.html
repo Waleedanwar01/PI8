@@ -1,0 +1,450 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="relative h-[720px] w-full bg-cover bg-center" style="background-image: url('{% if site_config and site_config.hero_image %}{{ site_config.hero_image.url }}{% else %}https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80{% endif %}');">
+    <div class="absolute inset-0 bg-black bg-opacity-30 bg-gradient-to-r from-black/50 to-transparent"></div>
+    <div class="relative z-10 h-full container mx-auto px-6 lg:px-12 flex items-center">
+        <div class="max-w-2xl">
+            <h1 class="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight drop-shadow-lg">
+                {% if site_config and site_config.hero_title %}
+                    {{ site_config.hero_title }}
+                {% else %}
+                    Affordable Taxi Insurance with <br/> Exceptional Service
+                {% endif %}
+                {% if site_config and site_config.hero_tagline %}
+                    <br/>{{ site_config.hero_tagline }}
+                {% endif %}
+            </h1>
+            {% if site_config and site_config.hero_description %}
+                <p class="text-white text-sm md:text-base mb-4 max-w-xl">
+                    {{ site_config.hero_description }}
+                </p>
+            {% endif %}
+            <a href="/p/request-a-quote/" class="inline-block bg-[#FBB03B] text-black font-bold text-lg py-4 px-8 rounded-none shadow-lg hover:bg-[#d8962f] transition transform hover:-translate-y-1">
+                Request an Insurance Quote
+            </a>
+        </div>
+    </div>
+</div>
+
+<section class="bg-white py-16">
+    <div class="max-w-6xl mx-auto px-6 lg:px-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+            <div class="max-w-xl">
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-5">
+                    Comprehensive Taxi and Cab Insurance Solutions
+                </h2>
+                <p class="text-gray-700 leading-relaxed mb-3 text-sm md:text-base">
+                    Owning a taxi cab company or other transportation service comes with great opportunities and benefits, as well as unique risks. No matter what type of transportation service you operate, it is essential that you protect your business, drivers, passengers, and vehicles from the everyday hazards of the road with comprehensive insurance.
+                </p>
+                <p class="text-gray-700 leading-relaxed mb-3 text-sm md:text-base">
+                    We know that finding the right coverage for the right price is a challenge for many business owners, which is why we provide convenient and affordable insurance quotes for all kinds of taxi, livery, limo, shuttle bus, and non-emergency medical transportation companies.
+                </p>
+                <p class="text-gray-700 leading-relaxed text-sm md:text-base">
+                    Contact us today and we will have you operating with confidence and peace of mind in no time.
+                </p>
+            </div>
+
+            <div class="flex lg:justify-end" data-aos="fade-left">
+                <div class="bg-[#FBB03B] text-white p-6 md:p-8 rounded-none flex flex-col justify-start w-full lg:max-w-md shadow-md border border-[#e09b2d]">
+                    <h3 class="text-lg md:text-xl font-bold mb-4">
+                        Get Your Quick Taxi Insurance Quote Today
+                    </h3>
+                    <form method="post" class="space-y-4">
+                        {% csrf_token %}
+                        
+                        {% if messages %}
+                            <div class="mb-4">
+                                {% for message in messages %}
+                                    <div class="p-4 text-sm rounded-none {% if message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %}">
+                                        {{ message }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        {% if quick_quote_form.errors %}
+                            <div class="mb-4 p-4 bg-red-100 border border-red-200 text-red-700 text-sm">
+                                <p class="font-bold mb-1">Please correct the errors below:</p>
+                                <ul class="list-disc list-inside">
+                                {% for field in quick_quote_form %}
+                                    {% for error in field.errors %}
+                                        <li>{{ field.label|default:field.name|title }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                                {% for error in quick_quote_form.non_field_errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+
+                        <div class="space-y-2.5">
+                            {{ quick_quote_form.contact_name }}
+                            {{ quick_quote_form.business_name }}
+                            {{ quick_quote_form.operate_state }}
+                            {{ quick_quote_form.email }}
+                            {{ quick_quote_form.phone }}
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <p class="text-sm font-semibold">Is this a new business? <span class="text-red-100">*</span></p>
+                            <div class="flex items-center gap-6 text-sm">
+                                {% for radio in quick_quote_form.is_new_business %}
+                                    <label class="inline-flex items-center gap-2">
+                                        {{ radio.tag }}
+                                        <span>{{ radio.choice_label }}</span>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <p class="text-sm font-semibold">How should we contact you to complete your application? <span class="text-red-100">*</span></p>
+                            <div class="flex flex-col gap-1.5 text-sm">
+                                {% for radio in quick_quote_form.contact_preference %}
+                                    <label class="inline-flex items-center gap-2">
+                                        {{ radio.tag }}
+                                        <span>{{ radio.choice_label }}</span>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="pt-1">
+                            <button type="submit" class="bg-[#8B183F] hover:bg-[#6b1230] text-white font-semibold text-sm tracking-wide px-8 py-2.5 rounded-none shadow-md transition-colors">
+                                Submit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+    </div>
+</section>
+
+
+
+<section class="bg-white py-16">
+    <div class="max-w-6xl mx-auto px-6 lg:px-12">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 text-center mb-10">
+            Explore Our Taxi Insurance Services
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch">
+            {% for service in services %}
+            <article class="bg-gray-100 shadow-md rounded-none overflow-hidden flex flex-col border border-gray-200" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+                <div class="h-56 w-full overflow-hidden">
+                    <img src="{{ service.get_hero_image_url }}"
+                         alt="{{ service.title }}"
+                         class="w-full h-full object-cover"
+                         onerror="this.onerror=null; this.src='https://picsum.photos/seed/{{ service.id }}/800/600';">
+                </div>
+                <div class="p-6 flex flex-col flex-1">
+                    <h3 class="text-lg font-bold text-gray-900 mb-3">{{ service.title }}</h3>
+                    <p class="text-sm text-gray-700 leading-relaxed mb-5">
+                        {{ service.meta_description }}
+                    </p>
+                    <div class="mt-auto">
+                        <a href="{{ service.get_absolute_url }}" class="inline-block bg-[#8B183F] hover:bg-[#6b1230] text-white text-sm font-semibold px-6 py-2 rounded-none">
+                            Get A {{ service.title }} Quote
+                        </a>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="bg-white py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-6 lg:px-12 text-center">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-600 mb-16">
+            Getting a Taxi Insurance Quote with OTTIS
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
+            <!-- Step 1 -->
+            <div class="flex flex-col items-center" data-aos="fade-up" data-aos-delay="0">
+                <div class="w-20 h-20 bg-[#FBB03B] rounded-full flex items-center justify-center text-white text-3xl font-bold mb-8 shadow-sm">
+                    1
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-4 px-4">
+                    Get a Quote: Easy Steps to Affordable Coverage
+                </h3>
+                <p class="text-gray-600 leading-relaxed text-sm md:text-base px-2">
+                    Fill out our quote request form and a member of our team will be in contact with you shortly.
+                </p>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="flex flex-col items-center">
+                <div class="w-20 h-20 bg-[#FBB03B] rounded-full flex items-center justify-center text-white text-3xl font-bold mb-8 shadow-sm">
+                    2
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-4 px-4">
+                    Contact Us for a Taxi Insurance Quote
+                </h3>
+                <p class="text-gray-600 leading-relaxed text-sm md:text-base px-2">
+                    Once your quote is submitted we'll quickly find trusted insurance plans to match your criteria and budget.
+                </p>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="flex flex-col items-center">
+                <div class="w-20 h-20 bg-[#FBB03B] rounded-full flex items-center justify-center text-white text-3xl font-bold mb-8 shadow-sm">
+                    3
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-4 px-4">
+                    Fast Approval Process for Taxi Insurance
+                </h3>
+                <p class="text-gray-600 leading-relaxed text-sm md:text-base px-2">
+                    Once approved, we'll be sure you have all the necessary paperwork to get you on the road and covered!
+                </p>
+            </div>
+        </div>
+
+        <div>
+            <a href="/p/request-a-quote/" class="inline-block bg-[#8B183F] hover:bg-[#6b1230] text-white font-bold text-sm px-8 py-3 rounded-none shadow-md transition-colors uppercase tracking-wide">
+                Get an Insurance Quote
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- About Oswald Section -->
+<section class="bg-white py-16 md:py-24">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+            <!-- Left Column: Content -->
+            <div class="max-w-2xl" data-aos="fade-right">
+                <!-- Logo Placeholder -->
+                <div class="flex items-center gap-1 mb-8">
+                    <div class="text-[#FBB03B] text-4xl font-bold">●</div>
+                    <div class="text-[#8B183F] text-4xl font-bold tracking-tighter">TTIS</div>
+                </div>
+                
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6 leading-tight">
+                    {{ site_config.home_about_title }}
+                </h2>
+                
+                <div class="text-gray-600 leading-relaxed mb-6 space-y-4">
+                    {{ site_config.home_about_content|linebreaks }}
+                </div>
+                
+                <a href="/p/about-us/" class="inline-block bg-[#8B183F] hover:bg-[#6b1230] text-white font-bold text-sm px-8 py-3 rounded-none shadow-md transition-colors uppercase tracking-wide">
+                    Learn More
+                </a>
+            </div>
+
+            <!-- Right Column: States Card -->
+            <div class="bg-[#8B183F] text-white p-8 md:p-12 shadow-xl w-full" data-aos="fade-left">
+                <!-- Currently Serving -->
+                <div class="mb-10">
+                    <h3 class="text-xl font-bold mb-6 border-b border-white/20 pb-2 inline-block">
+                        Currently Serving Clients In...
+                    </h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-2 text-sm font-medium">
+                        {% for state in serving_states %}
+                            <a href="{{ state.get_absolute_url }}" class="py-1 hover:text-[#FBB03B] transition-colors inline-block">{{ state.title }}</a>
+                        {% empty %}
+                        <ul class="space-y-2">
+                            <li>Alaska</li>
+                            <li>Arizona</li>
+                            <li>California</li>
+                            <li>Georgia</li>
+                            <li>Idaho</li>
+                        </ul>
+                        <ul class="space-y-2">
+                            <li>Iowa</li>
+                            <li>Louisiana</li>
+                            <li>Maryland</li>
+                            <li>Michigan</li>
+                            <li>Missouri</li>
+                            <li>Montana</li>
+                        </ul>
+                        <ul class="space-y-2">
+                            <li>Nevada</li>
+                            <li>North Carolina</li>
+                            <li>Ohio</li>
+                            <li>Oregon</li>
+                            <li>Pennsylvania</li>
+                            <li>South Carolina</li>
+                        </ul>
+                        <ul class="space-y-2">
+                            <li>Texas</li>
+                            <li>Utah</li>
+                            <li>Washington</li>
+                            <li>Wisconsin</li>
+                        </ul>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Soon to Be Serving -->
+                <div>
+                    <h3 class="text-xl font-bold mb-6 border-b border-white/20 pb-2 inline-block">
+                        Soon to Be Serving Clients In...
+                    </h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 text-sm font-medium">
+                        {% if site_config.get_coming_soon_states %}
+                            {% for state in site_config.get_coming_soon_states %}
+                                <div class="py-1">{{ state }}</div>
+                            {% endfor %}
+                        {% else %}
+                        <ul class="space-y-2">
+                            <li>Alabama</li>
+                            <li>Arkansas</li>
+                            <li>Colorado</li>
+                            <li>Connecticut</li>
+                            <li>Florida</li>
+                            <li>Illinois</li>
+                            <li>Indiana</li>
+                            <li>Kansas</li>
+                        </ul>
+                        <ul class="space-y-2">
+                            <li>Kentucky</li>
+                            <li>Maine</li>
+                            <li>Minnesota</li>
+                            <li>Mississippi</li>
+                            <li>Nebraska</li>
+                            <li>New Mexico</li>
+                            <li>New York</li>
+                            <li>North Dakota</li>
+                        </ul>
+                        <ul class="space-y-2">
+                            <li>Oklahoma</li>
+                            <li>South Dakota</li>
+                            <li>Tennessee</li>
+                            <li>Vermont</li>
+                            <li>Virginia</li>
+                            <li>West Virginia</li>
+                            <li>Wyoming</li>
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="bg-gray-50 py-16">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-10 leading-tight">
+            Testimonials: What Our Customers Say About Our Taxi Insurance
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
+            <!-- Review 1 -->
+            <div class="flex flex-col bg-white p-8 shadow-sm border border-gray-100" data-aos="fade-up" data-aos-delay="0">
+                <p class="text-gray-600 leading-relaxed mb-6 italic text-lg relative">
+                    <span class="text-6xl text-gray-200 absolute -top-4 -left-4 font-serif">"</span>
+                    <span class="relative z-10">I have nothing but amazing things to say about the people there! First-rate customer service!! Highly recommended! I had lots of issues, and all were easily handled, and very professionally I might add! I'm so happy I chose them as my agent!</span>
+                </p>
+                <p class="font-bold text-gray-900 mt-auto flex items-center gap-2">
+                    <span class="w-8 h-[1px] bg-[#8B183F]"></span>
+                    Gary C. (Google Review)
+                </p>
+            </div>
+            
+            <!-- Review 2 -->
+            <div class="flex flex-col bg-white p-8 shadow-sm border border-gray-100">
+                <p class="text-gray-600 leading-relaxed mb-6 italic text-lg relative">
+                    <span class="text-6xl text-gray-200 absolute -top-4 -left-4 font-serif">"</span>
+                    <span class="relative z-10">David and his staff have gone above and beyond all expectations after a traumatic issue. David has done an exceptional job as an advocate for me and the situation. His staff has always been willing to help with any and all questions and complete the task at hand. Oswald Insurance Office – gets a 5* from me. Thank you to all of you!</span>
+                </p>
+                <p class="font-bold text-gray-900 mt-auto flex items-center gap-2">
+                    <span class="w-8 h-[1px] bg-[#8B183F]"></span>
+                    Keland (Google Review)
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="bg-gray-50 py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-6 lg:px-12">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 text-center mb-12">
+            Frequently Asked Questions
+        </h2>
+
+        {% if faq_items %}
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+            {% for faq in faq_items %}
+            <div class="border-b border-gray-200 pb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00" x-data="{ open: false }">
+                <button @click="open = !open" class="w-full flex items-center justify-between cursor-pointer focus:outline-none">
+                    <span class="text-sm md:text-base font-medium text-gray-900 text-left pr-4">
+                        {{ faq.question }}
+                    </span>
+                    <span class="text-2xl text-gray-400 leading-none transition-transform duration-200 select-none" x-text="open ? '-' : '+'"></span>
+                </button>
+                <div x-show="open" x-collapse x-cloak class="mt-3 text-sm text-gray-600 leading-relaxed">
+                    {{ faq.answer|safe }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-center text-gray-500">No FAQs available at the moment.</p>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Related Articles Section -->
+<section class="bg-white pb-20 pt-16">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-10 border-b border-gray-200 pb-4 inline-block">
+            Latest News & Insights
+        </h2>
+        
+        {% if latest_posts %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for post in latest_posts %}
+            <article class="flex flex-col group cursor-pointer h-full" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+                <div class="h-56 mb-4 relative overflow-hidden bg-gray-100">
+                    <!-- Image -->
+                    <img src="{{ post.get_image_url }}" 
+                         onerror="this.onerror=null;this.src='/media/hero/taxi.jpg';"
+                         alt="{{ post.title }}" 
+                         class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-0">
+                    
+                    <!-- Hover Overlay (Maroon) -->
+                    <a href="{% url 'blog_detail' post.slug %}" class="absolute inset-0 bg-[#8B183F] flex flex-col items-center justify-center p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                         <div class="absolute inset-0 bg-[#7a1537] opacity-50 mix-blend-multiply"></div>
+                         <div class="relative z-10 text-white text-center">
+                             <h3 class="font-bold text-sm leading-tight mb-2">
+                                {{ post.title }}
+                            </h3>
+                             <svg class="w-6 h-6 text-white mt-1 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                         </div>
+                    </a>
+                </div>
+                <h3 class="font-bold text-gray-900 mb-2 leading-snug group-hover:text-[#8B183F] transition-colors text-lg">
+                    <a href="{% url 'blog_detail' post.slug %}">{{ post.title }}</a>
+                </h3>
+                <p class="text-xs text-gray-500 mb-3 uppercase tracking-wider">
+                    {{ post.created_at|date:"F j, Y" }} {% if post.category %}| <span class="text-[#8B183F]">{{ post.category.name }}</span>{% endif %}
+                </p>
+                <p class="text-sm text-gray-600 line-clamp-3 leading-relaxed mb-4">
+                    {{ post.content|striptags|truncatewords:20 }}
+                </p>
+                <a href="{% url 'blog_detail' post.slug %}" class="mt-auto text-sm font-bold text-[#8B183F] hover:text-[#111827] transition inline-flex items-center group/link">
+                    Read More <svg class="w-4 h-4 ml-2 transform group-hover/link:translate-x-1 transition-transform" style="width: 16px; height: 16px; min-width: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </a>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-gray-500 italic">No blog posts available at the moment. Check back soon!</p>
+        {% endif %}
+
+        <div class="mt-12 text-center">
+            <a href="{% url 'blog_list' %}" class="inline-block border-2 border-[#8B183F] text-[#8B183F] font-bold text-sm px-8 py-3 rounded-none hover:bg-[#8B183F] hover:text-white transition-colors uppercase tracking-wide">
+                View All Articles
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

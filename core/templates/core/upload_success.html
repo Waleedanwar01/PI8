@@ -1,0 +1,46 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="min-h-[70vh] flex items-center justify-center bg-gray-50 py-16 px-4">
+    <div class="max-w-3xl w-full bg-white shadow-xl border-t-8 border-[#8B183F] p-8 md:p-12 text-center">
+        
+        <div class="mb-8 flex justify-center">
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
+                <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+        </div>
+
+        <h1 class="text-4xl font-extrabold text-[#111827] mb-6">Thank You!</h1>
+        
+        <div class="bg-blue-50 text-blue-900 border border-blue-100 p-6 mb-8 rounded-lg text-lg leading-relaxed">
+            <p>We received your submission and our team will review it shortly. Please let us know if there's anything else we can help with.</p>
+        </div>
+
+        <div class="space-y-6 max-w-lg mx-auto border-t border-gray-100 pt-8">
+            <h2 class="text-xl font-bold text-gray-800">Need immediate assistance?</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-gray-50 p-4 rounded border border-gray-100">
+                    <p class="text-xs text-gray-500 uppercase font-semibold mb-1">Phone</p>
+                    <a href="tel:{{ site_config.phone_number|default:'541-223-5222' }}" class="text-[#8B183F] font-bold text-lg hover:underline">
+                        {{ site_config.phone_number|default:'541-223-5222' }}
+                    </a>
+                </div>
+                <div class="bg-gray-50 p-4 rounded border border-gray-100">
+                    <p class="text-xs text-gray-500 uppercase font-semibold mb-1">Email</p>
+                    <a href="mailto:{{ site_config.email|default:'info@ttis.com' }}" class="text-[#8B183F] font-bold text-lg hover:underline break-all">
+                        {{ site_config.email|default:'info@ttis.com' }}
+                    </a>
+                </div>
+            </div>
+
+            <div class="pt-4">
+                <a href="/p/contact-us/" class="inline-flex items-center justify-center bg-[#8B183F] hover:bg-[#6b1230] text-white font-bold py-3 px-8 rounded shadow-md transition-all hover:-translate-y-0.5">
+                    Contact Support Team
+                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

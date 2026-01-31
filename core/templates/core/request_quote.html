@@ -1,0 +1,315 @@
+{% extends 'core/base.html' %}
+
+{% block head_title %}
+	<title>{{ item.title }} | {{ site_config.site_name|default:"Quotes Insurance" }}</title>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section (Fallback to MainPage style) -->
+{% if item.hero_image %}
+<div class="relative h-[450px] w-full bg-gray-900 bg-cover bg-center" style="background-image: url('{{ item.hero_image.url }}');">
+    <div class="absolute inset-0 bg-black/60 bg-gradient-to-r from-black/80 to-transparent"></div>
+    <div class="relative z-10 h-full container mx-auto px-6 lg:px-12 flex flex-col justify-center">
+        <div class="max-w-3xl">
+            <nav class="flex text-sm text-gray-300 mb-4 uppercase tracking-wider font-semibold">
+                <a href="/" class="hover:text-white transition">Home</a>
+                <span class="mx-2">/</span>
+                <span class="text-white">{{ item.title }}</span>
+            </nav>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight drop-shadow-lg tracking-tight">
+                {% if item.hero_title %}{{ item.hero_title }}{% else %}{{ item.title }}{% endif %}
+            </h1>
+            {% if item.hero_subtitle %}
+            <p class="text-gray-200 text-lg md:text-xl max-w-2xl font-light leading-relaxed">
+                {{ item.hero_subtitle }}
+            </p>
+            {% elif item.meta_description %}
+            <p class="text-gray-200 text-lg md:text-xl max-w-2xl font-light leading-relaxed">
+                {{ item.meta_description }}
+            </p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="relative h-[450px] w-full bg-gray-900 bg-cover bg-center" style="background-image: url('{{ item.get_hero_image_url }}');">
+    <div class="absolute inset-0 bg-black/60 bg-gradient-to-r from-black/80 to-transparent"></div>
+    <div class="relative z-10 h-full container mx-auto px-6 lg:px-12 flex flex-col justify-center">
+        <div class="max-w-3xl">
+            <nav class="flex text-sm text-gray-300 mb-4 uppercase tracking-wider font-semibold">
+                <a href="/" class="hover:text-white transition">Home</a>
+                <span class="mx-2">/</span>
+                <span class="text-white">{{ item.title }}</span>
+            </nav>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight drop-shadow-lg tracking-tight">
+                {% if item.hero_title %}{{ item.hero_title }}{% else %}{{ item.title }}{% endif %}
+            </h1>
+            {% if item.hero_subtitle %}
+            <p class="text-gray-200 text-lg md:text-xl max-w-2xl font-light leading-relaxed">
+                {{ item.hero_subtitle }}
+            </p>
+            {% elif item.meta_description %}
+            <p class="text-gray-200 text-lg md:text-xl max-w-2xl font-light leading-relaxed">
+                {{ item.meta_description }}
+            </p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="container mx-auto px-6 lg:px-12 py-10">
+    <div class="max-w-7xl mx-auto">
+        <!-- Title -->
+        <!-- Title removed as it is now in Hero Section -->
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
+            <!-- Left Column: Form -->
+            <div class="lg:col-span-2">
+                <!-- Progress Bar -->
+                <div class="mb-10" x-data="{ progress: 0 }" x-init="
+                    $watch('$el.closest(\'form\')', (form) => {
+                        const updateProgress = () => {
+                            const inputs = Array.from(form.querySelectorAll('input, select, textarea'));
+                            const total = inputs.filter(i => i.type !== 'hidden' && i.type !== 'submit').length;
+                            const filled = inputs.filter(i => {
+                                if (i.type === 'radio' || i.type === 'checkbox') return i.checked;
+                                return i.value.trim() !== '';
+                            }).length;
+                            // Approximate progress calculation (adjust logic as needed)
+                            progress = Math.min(100, Math.round((filled / total) * 100 * 1.5)); 
+                        };
+                        form.addEventListener('input', updateProgress);
+                        form.addEventListener('change', updateProgress);
+                        updateProgress();
+                    })
+                ">
+                    <div class="w-full bg-gray-200 rounded-full h-4">
+                        <div class="bg-[#1f75cb] h-4 rounded-full text-xs text-white text-center flex items-center justify-center font-bold transition-all duration-500" :style="`width: ${progress}%`"></div>
+                    </div>
+                </div>
+
+                <form method="post" enctype="multipart/form-data" class="space-y-10" x-data novalidate>
+                    {% csrf_token %}
+                    
+                    {% if form.errors %}
+                        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
+                            <strong class="font-bold">Please correct the errors below.</strong>
+                            <span class="block sm:inline">Some required fields are missing or invalid.</span>
+                        </div>
+                    {% endif %}
+                    
+                    <!-- General Information -->
+                    <div>
+                        <h2 class="text-xl font-bold text-[#111827] border-b border-gray-200 pb-2 mb-6">General Information</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-1">
+                                <label class="block text-sm font-bold text-gray-700">Business Name <span class="text-[#FBB03B]">*</span></label>
+                                {{ form.business_name }}
+                                {% if form.business_name.errors %}
+                                    <p class="text-red-500 text-xs mt-1">{{ form.business_name.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="space-y-1">
+                                <label class="block text-sm font-bold text-gray-700">Phone <span class="text-[#FBB03B]">*</span></label>
+                                {{ form.phone }}
+                                {% if form.phone.errors %}
+                                    <p class="text-red-500 text-xs mt-1">{{ form.phone.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="space-y-1 md:col-start-2">
+                                <label class="block text-sm font-bold text-gray-700">Proposed Start Date <span class="text-[#FBB03B]">*</span></label>
+                                {{ form.proposed_start_date }}
+                                {% if form.proposed_start_date.errors %}
+                                    <p class="text-red-500 text-xs mt-1">{{ form.proposed_start_date.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="space-y-1">
+                                <label class="block text-sm font-bold text-gray-700">Contact Name</label>
+                                {{ form.contact_name }}
+                                {% if form.contact_name.errors %}
+                                    <p class="text-red-500 text-xs mt-1">{{ form.contact_name.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="space-y-1">
+                                <label class="block text-sm font-bold text-gray-700">Email <span class="text-[#FBB03B]">*</span></label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                    <p class="text-red-500 text-xs mt-1">{{ form.email.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="space-y-1 md:col-span-2">
+                                <label class="block text-sm font-bold text-gray-700">Website</label>
+                                {{ form.website }}
+                                {% if form.website.errors %}
+                                    <p class="text-red-500 text-xs mt-1">{{ form.website.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FEIN -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">For an Immediate Quote Include FEIN</label>
+                        {{ form.fein }}
+                    </div>
+
+                    <!-- Address -->
+                    <div>
+                        <h2 class="text-xl font-bold text-[#111827] mb-6">Address</h2>
+                        <div class="space-y-6">
+                            <div class="space-y-1">
+                                <label class="block text-sm font-bold text-gray-700">Street Address</label>
+                                {{ form.street_address }}
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="space-y-1">
+                                    <label class="block text-sm font-bold text-gray-700">City</label>
+                                    {{ form.city }}
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="block text-sm font-bold text-gray-700">State / Province / Region</label>
+                                    {{ form.state_address }}
+                                </div>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="block text-sm font-bold text-gray-700">ZIP / Postal Code</label>
+                                {{ form.zip_code }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- New Business -->
+                    <div class="space-y-2">
+                        <label class="block text-sm font-bold text-gray-700">Is this a new business? <span class="text-[#FBB03B]">*</span></label>
+                        <div class="flex items-center gap-4">
+                            {% for radio in form.is_new_business %}
+                                <div class="flex items-center">
+                                    {{ radio.tag }}
+                                    <label for="{{ radio.id_for_label }}" class="ml-2 text-sm text-gray-700 bg-gray-100 px-4 py-2 rounded border border-gray-200 cursor-pointer hover:bg-gray-200">{{ radio.choice_label }}</label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% if form.is_new_business.errors %}
+                            <p class="text-red-500 text-xs mt-1">{{ form.is_new_business.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Operation Details -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-1">
+                            <label class="block text-sm font-bold text-gray-700">Description of Operation</label>
+                            {{ form.description_of_operation }}
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-sm font-bold text-gray-700">Cities where vehicles regularly operate</label>
+                            {{ form.cities_of_operation }}
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="block text-sm font-bold text-gray-700">What state do you operate in?</label>
+                        {{ form.operate_state }}
+                    </div>
+
+                    <!-- Loss History -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
+                        <div class="space-y-1">
+                            <label class="block text-sm font-bold text-gray-700">Number of Losses</label>
+                            {{ form.number_of_losses }}
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-sm font-bold text-gray-700">Upload loss runs</label>
+                            {{ form.loss_runs_file }}
+                            <p class="text-xs text-gray-500 mt-1">Max. file size: 50 MB.</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-500">Please give approximate number of and total amount of all losses for the past four years which will show on your Claims History</p>
+
+                    <!-- Misc Documents -->
+                    <div>
+                        <h2 class="text-xl font-bold text-[#111827] mb-4">Misc Document Upload</h2>
+                        <div class="border-2 border-dashed border-gray-300 bg-gray-50 p-8 text-center rounded-lg">
+                            <p class="text-gray-500 mb-2">Drop files here or</p>
+                            <div class="inline-block relative overflow-hidden">
+                                {{ form.misc_files }}
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">Max. file size: 50 MB, Max. files: 10.</p>
+                        <p class="text-xs text-gray-500">Misc Docs - Dec pages, Excel Spread Sheets, MVRs, Licenses or Registrations</p>
+                    </div>
+
+                    <!-- Insurance History -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-1">
+                            <label class="block text-sm font-bold text-gray-700">Are you currently insured?</label>
+                            {{ form.is_currently_insured }}
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-sm font-bold text-gray-700">Who is your current carrier?</label>
+                            {{ form.current_carrier }}
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-sm font-bold text-gray-700">Radius of operation</label>
+                            {{ form.radius_of_operation }}
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-sm font-bold text-gray-700">Number of years in business</label>
+                            {{ form.years_in_business }}
+                        </div>
+                    </div>
+
+                    <!-- Coverage Limits -->
+                    <div>
+                        <h2 class="text-xl font-bold text-[#111827] border-b border-gray-200 pb-2 mb-6">Coverage Limits</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="space-y-1">
+                                <label class="block text-sm font-bold text-gray-700">General liability needed?</label>
+                                {{ form.general_liability_needed }}
+                            </div>
+                            <div class="space-y-1">
+                                <label class="block text-sm font-bold text-gray-700">General liability limits</label>
+                                {{ form.general_liability_limits }}
+                            </div>
+                            <div class="space-y-1">
+                                <label class="block text-sm font-bold text-gray-700">Auto liability limits</label>
+                                {{ form.auto_liability_limits }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="pt-6 text-right">
+                         <button type="submit" class="bg-[#8B183F] hover:bg-[#6b1230] text-white font-bold py-3 px-8 rounded-none shadow-md transition-all text-sm uppercase tracking-widest">
+                            Submit Request
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- Right Sidebar -->
+            <div class="lg:col-span-1">
+                <div class="bg-gray-100 p-8 shadow-sm rounded-none sticky top-24">
+                    <h3 class="text-xl font-bold text-[#111827] mb-4">Need help?</h3>
+                    <p class="text-sm text-gray-700 mb-6 leading-relaxed">
+                        Call our friendly sales staff and we'll gladly walk you through the necessary steps to complete your application!
+                    </p>
+                    
+                    <a href="tel:{{ site_config.phone_number|default:'541-223-5222' }}" class="block bg-[#8B183F] hover:bg-[#6b1230] text-white font-bold py-3 text-center rounded-none shadow-sm transition-colors mb-8">
+                        Call Us: {{ site_config.phone_number|default:'541-223-5222' }}
+                    </a>
+                    
+                    <p class="text-sm text-gray-700 mb-6 leading-relaxed">
+                        If you need to reach us outside of normal business hours, send us an email and we'll get back to you as quickly as possible.
+                    </p>
+                    
+                    <a href="mailto:{{ site_config.email|default:'info@ttis.com' }}" class="block bg-[#8B183F] hover:bg-[#6b1230] text-white font-bold py-3 text-center rounded-none shadow-sm transition-colors">
+                        Send Us an Email
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

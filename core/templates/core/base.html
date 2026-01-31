@@ -1,0 +1,594 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		{% block head_title %}
+			<title>{% if site_config and site_config.homepage_title %}{{ site_config.homepage_title }} | {{ site_config.site_name|default:"Quotes Insurance" }}{% else %}{{ site_config.site_name|default:"Quotes Insurance" }}{% endif %}</title>
+		{% endblock %}
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		{% block head_meta %}{% endblock %}
+		{% if site_config and site_config.favicon %}
+			<link rel="icon" type="image/png" href="{{ site_config.favicon.url }}">
+		{% endif %}
+		<!-- Alpine.js Plugins -->
+		<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+		<!-- Alpine.js Core -->
+		<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+		{% tailwind_css %}
+		<style>
+			[x-cloak] { display: none !important; }
+			html { scroll-behavior: smooth; overflow-x: hidden; }
+			body { overflow-x: hidden; }
+			.rich-content { font-size: 0.95rem; line-height: 1.7; color: #111827; }
+			.rich-content p + p { margin-top: 0.9rem; }
+			.rich-content h2 { font-size: 1.4rem; font-weight: 700; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+			.rich-content h3 { font-size: 1.2rem; font-weight: 600; margin-top: 1.25rem; margin-bottom: 0.6rem; }
+			.rich-content ul, .rich-content ol { margin-left: 1.5rem; margin-top: 0.75rem; margin-bottom: 0.75rem; }
+			.rich-content li { margin-bottom: 0.35rem; }
+			.rich-content a { color: #8B183F; text-decoration: underline; text-decoration-thickness: 1px; }
+			.rich-content img { max-width: 100%; height: auto; display: block; margin: 1.25rem auto; border-radius: 0; }
+		</style>
+	</head>
+
+	<body class="bg-white text-gray-900 font-sans antialiased flex flex-col min-h-screen overflow-x-hidden" x-data="{ 
+		scrolled: false, 
+		mobileMenuOpen: false, 
+		toggleMobileMenu() { this.mobileMenuOpen = !this.mobileMenuOpen },
+		scrollToTop() {
+			const start = window.pageYOffset;
+			const duration = 700;
+			const startTime = performance.now();
+			const animate = (now) => {
+				const elapsed = now - startTime;
+				const progress = Math.min(elapsed / duration, 1);
+				const eased = 1 - Math.pow(1 - progress, 3);
+				window.scrollTo(0, start * (1 - eased));
+				if (progress < 1) {
+					requestAnimationFrame(animate);
+				}
+			};
+			requestAnimationFrame(animate);
+		}
+	}" @scroll.window="scrolled = (window.pageYOffset > 100)">
+
+		<!-- Top Contact Bar -->
+		<div class="bg-[#8B183F] text-white text-[11px] sm:text-xs py-2 px-2 sm:px-4 md:px-8 flex justify-end items-center flex-wrap font-sans transition-all duration-300">
+			{% if site_config and site_config.phone_number %}
+				<span class="font-bold">Trucks/Shuttle Buses: {{ site_config.phone_number }}</span>
+				<span class="mx-2">|</span>
+				<span class="font-bold">All Other Insurance Types: {{ site_config.phone_number }}</span>
+			{% else %}
+				<span class="font-bold">Trucks/Shuttle Buses: 541-223-5222</span>
+				<span class="mx-2">|</span>
+				<span class="font-bold">All Other Insurance Types: 541-223-5222</span>
+			{% endif %}
+		</div>
+
+		<!-- Main Navbar -->
+		<nav :class="{ 'shadow-lg bg-[#8B183F]/95 backdrop-blur-sm': scrolled, 'bg-[#8B183F]': !scrolled }" class="sticky top-0 z-50 w-full transition-all duration-300 border-b border-[#7a1537]/20">
+			<div class="flex items-center justify-between lg:justify-start h-20 w-full max-w-[1920px] mx-auto">
+				<!-- Logo Area -->
+				<div class="flex items-center bg-white h-full px-6 lg:px-10 relative z-10 shrink-0">
+					<a href="/" class="flex items-center">
+						{% if site_config and site_config.logo %}
+							<img src="{{ site_config.logo.url }}" alt="{{ site_config.site_name|default:'Quotes Insurance' }}" class="h-8 w-auto object-contain">
+						{% else %}
+							<div class="flex items-center gap-1">
+								<div class="text-[#333333] text-4xl font-bold">●</div>
+								<div class="text-[#8B183F] text-4xl font-bold tracking-tighter">
+									{% if site_config and site_config.site_name %}
+										{{ site_config.site_name }}
+									{% else %}
+										TTIS
+									{% endif %}
+								</div>
+							</div>
+						{% endif %}
+					</a>
+					<!-- Triangle/Slant effect -->
+					<div class="absolute top-0 right-0 h-full w-12 bg-white transform skew-x-12 translate-x-6 z-[-1]"></div>
+				</div>
+
+				<!-- Request Quote Button (Desktop) -->
+				<div class="hidden lg:flex h-full items-center bg-[#FBB03B] hover:bg-[#e09b2d] transition-colors cursor-pointer ml-4 group lg:order-1 shrink-0">
+					<button class="text-white font-bold text-lg uppercase px-8 h-full flex items-center gap-2">
+						Request a Quote
+						<svg class="w-5 h-5 transform group-hover:rotate-180 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+					</button>
+					<!-- Big Dropdown with Icons -->
+					<div class="absolute top-full left-0 w-full bg-[#333333] text-white shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 border-t-4 border-white">
+						<div class="container mx-auto p-10">
+							<div class="flex flex-row justify-center gap-6 flex-wrap">
+								<!-- Card 1 -->
+								<a href="/p/request-a-quote/" class="block bg-[#444] p-6 hover:bg-[#555] transition text-center group/card rounded-sm border border-transparent hover:border-white w-56 flex flex-col items-center justify-center h-48">
+									<div class="text-4xl mb-4 text-white">
+										<svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+									</div>
+									<span class="font-bold text-sm uppercase tracking-wide leading-snug">Request a Quote</span>
+								</a>
+								<!-- Card 2 -->
+								<a href="/p/limo-insurance/" class="block bg-[#444] p-6 hover:bg-[#555] transition text-center group/card rounded-sm border border-transparent hover:border-white w-56 flex flex-col items-center justify-center h-48">
+									<div class="text-4xl mb-4 text-white">
+										<svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+									</div>
+									<span class="font-bold text-sm uppercase tracking-wide leading-snug">Limo Insurance</span>
+								</a>
+								<!-- Card 3 -->
+								<a href="/p/livery-insurance/" class="block bg-[#444] p-6 hover:bg-[#555] transition text-center group/card rounded-sm border border-transparent hover:border-white w-56 flex flex-col items-center justify-center h-48">
+									<div class="text-4xl mb-4 text-white">
+										<svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+									</div>
+									<span class="font-bold text-sm uppercase tracking-wide leading-snug">Livery Insurance</span>
+								</a>
+								<!-- Card 4 -->
+								<a href="/p/shuttle-bus-insurance/" class="block bg-[#444] p-6 hover:bg-[#555] transition text-center group/card rounded-sm border border-transparent hover:border-white w-56 flex flex-col items-center justify-center h-48">
+									<div class="text-4xl mb-4 text-white">
+										<svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"></path></svg>
+									</div>
+									<span class="font-bold text-sm uppercase tracking-wide leading-snug">Shuttle Bus Insurance</span>
+								</a>
+								<!-- Card 5 -->
+								<a href="/p/non-medical-insurance/" class="block bg-[#444] p-6 hover:bg-[#555] transition text-center group/card rounded-sm border border-transparent hover:border-white w-56 flex flex-col items-center justify-center h-48">
+									<div class="text-4xl mb-4 text-white">
+										<svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+									</div>
+									<span class="font-bold text-sm uppercase tracking-wide leading-snug">Non-Medical Insurance</span>
+								</a>
+								<!-- Card 6 -->
+								<a href="/p/box-truck-insurance/" class="block bg-[#444] p-6 hover:bg-[#555] transition text-center group/card rounded-sm border border-transparent hover:border-white w-56 flex flex-col items-center justify-center h-48">
+									<div class="text-4xl mb-4 text-white">
+										<svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+									</div>
+									<span class="font-bold text-sm uppercase tracking-wide leading-snug">Box Truck Insurance</span>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Desktop Navigation Links -->
+				<div class="hidden lg:flex items-center space-x-6 ml-8 lg:order-2 h-full">
+					
+					{% if main_pages %}
+						<a href="{% url 'blog_list' %}" class="text-white text-sm font-semibold hover:bg-[#7a1537] px-3 py-2 h-full flex items-center transition">Blog</a>
+						{% for page in main_pages %}
+							{% if page.dropdown_items.all|length %}
+								<div class="group h-20 flex items-center">
+									<a href="{{ page.get_absolute_url }}" class="text-white text-sm font-semibold hover:bg-[#7a1537] px-3 py-2 rounded-none transition flex items-center h-full">
+										{{ page.title }}
+										<svg class="w-4 h-4 ml-1 transform group-hover:rotate-180 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+									</a>
+									<div class="absolute top-full left-0 w-full bg-[#333333] text-white shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 border-t-4 border-white">
+										<div class="container mx-auto p-10">
+											<div class="flex flex-row justify-center gap-6 flex-wrap">
+												{% for item in page.dropdown_items.all %}
+													{% if item.is_active %}
+													<a href="{% if item.url %}{{ item.url }}{% else %}{{ item.get_absolute_url }}{% endif %}" class="block bg-[#444] p-6 hover:bg-[#555] transition text-center group/card rounded-sm border border-transparent hover:border-white w-56 flex flex-col items-center justify-center h-48">
+														{% if item.image %}
+															<div class="mb-3 h-24 w-full overflow-hidden bg-black/20">
+																<img src="{{ item.image.url }}" alt="{{ item.title }}" class="w-full h-full object-cover">
+															</div>
+														{% else %}
+															<div class="text-4xl mb-4 text-white">
+																{% if item.icon_svg %}
+																	{{ item.icon_svg|safe }}
+																{% else %}
+																	<svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+																{% endif %}
+															</div>
+														{% endif %}
+														<div class="font-bold text-sm uppercase tracking-wide leading-snug">{{ item.title }}</div>
+														{% if item.description %}
+															<div class="text-[11px] mt-1 text-white/80 leading-snug">
+																{{ item.description }}
+															</div>
+														{% endif %}
+													</a>
+													{% endif %}
+												{% endfor %}
+											</div>
+										</div>
+									</div>
+								</div>
+							{% else %}
+								{% if page.url %}
+									<a href="{{ page.url }}" class="text-white text-sm font-semibold hover:bg-[#7a1537] px-3 py-2 h-full flex items-center transition">{{ page.title }}</a>
+								{% else %}
+									<a href="{{ page.get_absolute_url }}" class="text-white text-sm font-semibold hover:bg-[#7a1537] px-3 py-2 h-full flex items-center transition">{{ page.title }}</a>
+								{% endif %}
+							{% endif %}
+						{% endfor %}
+					{% else %}
+						<!-- Prospective Customers Dropdown -->
+					<div class="group h-full flex items-center">
+						<button class="text-white text-sm font-semibold hover:bg-[#7a1537] px-2 py-2 rounded-none transition flex items-center h-full relative z-10">
+							Prospective Customers
+							<svg class="w-4 h-4 ml-1 transform group-hover:rotate-180 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+						</button>
+						<div class="absolute top-full left-0 w-full bg-[#333333] text-white shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 border-t-4 border-white">
+							<div class="container mx-auto p-10">
+								<div class="flex flex-row justify-center gap-6 flex-wrap">
+									<a href="/p/request-a-quote/" class="block bg-[#444] p-6 hover:bg-[#555] transition text-center group/card rounded-sm border border-transparent hover:border-white w-56 flex flex-col items-center justify-center h-48">
+										<div class="text-4xl mb-4 text-white">
+											<svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+										</div>
+										<span class="font-bold text-sm uppercase tracking-wide leading-snug">Request a Quote</span>
+									</a>
+									<a href="/d/sales-support/" class="block bg-[#444] p-6 hover:bg-[#555] transition text-center group/card rounded-sm border border-transparent hover:border-white w-56 flex flex-col items-center justify-center h-48">
+										<div class="text-4xl mb-4 text-white">
+											<svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+										</div>
+										<span class="font-bold text-sm uppercase tracking-wide leading-snug">Sales & Application Support</span>
+									</a>
+									<a href="/d/definitions/" class="block bg-[#444] p-6 hover:bg-[#555] transition text-center group/card rounded-sm border border-transparent hover:border-white w-56 flex flex-col items-center justify-center h-48">
+										<div class="text-4xl mb-4 text-white">
+											<svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+										</div>
+										<span class="font-bold text-sm uppercase tracking-wide leading-snug">Insurance Term Definitions</span>
+									</a>
+									<a href="/d/upload-a-file/" class="block bg-[#444] p-6 hover:bg-[#555] transition text-center group/card rounded-sm border border-transparent hover:border-white w-56 flex flex-col items-center justify-center h-48">
+										<div class="text-4xl mb-4 text-white">
+											<svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+										</div>
+										<span class="font-bold text-sm uppercase tracking-wide leading-snug">Upload a File</span>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Existing Customers Dropdown -->
+					<div class="group h-full flex items-center">
+						<button class="text-white text-sm font-semibold hover:bg-[#7a1537] px-2 py-2 rounded-none transition flex items-center h-full relative z-10">
+							Existing Customers
+							<svg class="w-4 h-4 ml-1 transform group-hover:rotate-180 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+						</button>
+						<div class="absolute top-full left-0 w-full bg-[#333333] text-white shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 border-t-4 border-white">
+							<div class="container mx-auto p-10">
+								<div class="flex flex-row justify-center gap-6 flex-wrap">
+									<a href="/d/file-a-claim/" class="block bg-[#444] p-6 hover:bg-[#555] transition text-center group/card rounded-sm border border-transparent hover:border-white w-56 flex flex-col items-center justify-center h-48">
+										<div class="text-4xl mb-4 text-white">
+											<svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+										</div>
+										<span class="font-bold text-sm uppercase tracking-wide leading-snug">Submit a Claim</span>
+									</a>
+									<a href="/d/policy-changes/" class="block bg-[#444] p-6 hover:bg-[#555] transition text-center group/card rounded-sm border border-transparent hover:border-white w-56 flex flex-col items-center justify-center h-48">
+										<div class="text-4xl mb-4 text-white">
+											<svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+										</div>
+										<span class="font-bold text-sm uppercase tracking-wide leading-snug">Add/Edit Vehicle List</span>
+									</a>
+									<a href="/d/make-a-payment-online/" class="block bg-[#444] p-6 hover:bg-[#555] transition text-center group/card rounded-sm border border-transparent hover:border-white w-56 flex flex-col items-center justify-center h-48">
+										<div class="text-4xl mb-4 text-white">
+											<svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+										</div>
+										<span class="font-bold text-sm uppercase tracking-wide leading-snug">Make a Payment</span>
+									</a>
+									<a href="/d/support-for-current-clients/" class="block bg-[#444] p-6 hover:bg-[#555] transition text-center group/card rounded-sm border border-transparent hover:border-white w-56 flex flex-col items-center justify-center h-48">
+										<div class="text-4xl mb-4 text-white">
+											<svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+										</div>
+										<span class="font-bold text-sm uppercase tracking-wide leading-snug">Support</span>
+									</a>
+									<a href="/d/upload-a-file/" class="block bg-[#444] p-6 hover:bg-[#555] transition text-center group/card rounded-sm border border-transparent hover:border-white w-56 flex flex-col items-center justify-center h-48">
+										<div class="text-4xl mb-4 text-white">
+											<svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+										</div>
+										<span class="font-bold text-sm uppercase tracking-wide leading-snug">Upload a File</span>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<a href="{% url 'blog_list' %}" class="text-white text-sm font-semibold hover:bg-[#7a1537] px-2 py-2 h-full flex items-center transition">Blog</a>
+
+					<!-- About Us Dropdown -->
+					<div class="group h-full flex items-center">
+						<button class="text-white text-sm font-semibold hover:bg-[#7a1537] px-2 py-2 rounded-none transition flex items-center h-full relative z-10">
+							About Us
+							<svg class="w-4 h-4 ml-1 transform group-hover:rotate-180 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+						</button>
+						<div class="absolute top-full left-0 w-full bg-[#333333] text-white shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 border-t-4 border-white">
+							<div class="container mx-auto p-10">
+								<div class="flex flex-row justify-center gap-6 flex-wrap">
+									<a href="/p/contact-us/" class="block bg-[#444] p-6 hover:bg-[#555] transition text-center group/card rounded-sm border border-transparent hover:border-white w-56 flex flex-col items-center justify-center h-48">
+										<div class="text-4xl mb-4 text-white">
+											<svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+										</div>
+										<span class="font-bold text-sm uppercase tracking-wide leading-snug">Contact Information</span>
+									</a>
+									<a href="/p/about-us/" class="block bg-[#444] p-6 hover:bg-[#555] transition text-center group/card rounded-sm border border-transparent hover:border-white w-56 flex flex-col items-center justify-center h-48">
+										<div class="text-4xl mb-4 text-white">
+											<svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+										</div>
+										<span class="font-bold text-sm uppercase tracking-wide leading-snug">About Us</span>
+									</a>
+									<a href="/p/partners/" class="block bg-[#444] p-6 hover:bg-[#555] transition text-center group/card rounded-sm border border-transparent hover:border-white w-56 flex flex-col items-center justify-center h-48">
+										<div class="text-4xl mb-4 text-white">
+											<svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+										</div>
+										<span class="font-bold text-sm uppercase tracking-wide leading-snug">Partners</span>
+									</a>
+									<a href="/p/refer-a-friend/" class="block bg-[#444] p-6 hover:bg-[#555] transition text-center group/card rounded-sm border border-transparent hover:border-white w-56 flex flex-col items-center justify-center h-48">
+										<div class="text-4xl mb-4 text-white">
+											<svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+										</div>
+										<span class="font-bold text-sm uppercase tracking-wide leading-snug">Refer a Friend</span>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<a href="/p/contact-us/" class="text-white text-sm font-semibold hover:bg-[#7a1537] px-2 py-2 h-full flex items-center transition">Contact Us</a>
+					{% endif %}
+				</div>
+
+				<!-- Mobile Menu Button -->
+				<div class="lg:hidden pr-4">
+					<button @click="toggleMobileMenu()" class="text-white focus:outline-none relative w-8 h-8 flex items-center justify-center">
+						<svg x-show="!mobileMenuOpen" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 rotate-[-90deg]" x-transition:enter-end="opacity-100 rotate-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 rotate-0" x-transition:leave-end="opacity-0 rotate-[-90deg]" class="w-8 h-8 absolute" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+						<svg x-show="mobileMenuOpen" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 rotate-90" x-transition:enter-end="opacity-100 rotate-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 rotate-0" x-transition:leave-end="opacity-0 rotate-90" class="w-8 h-8 absolute" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+					</button>
+				</div>
+			</div>
+
+			<!-- Mobile Menu -->
+			<div x-show="mobileMenuOpen" x-collapse x-cloak class="lg:hidden bg-[#8B183F] border-t border-[#7a1537] overflow-hidden">
+				<div class="flex flex-col">
+					<!-- Request a Quote Mobile Dropdown -->
+					<div x-data="{ open: false }">
+						<button @click="open = !open" class="w-full text-left text-white font-semibold py-3 px-6 hover:bg-[#7a1537] flex justify-between items-center">
+							Request a Quote
+							<svg :class="{'rotate-180': open}" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+						</button>
+						<div x-show="open" x-collapse class="bg-[#6b1230]">
+							<a href="/p/request-a-quote/" class="block text-gray-200 py-2 px-8 hover:bg-[#5a0f28]">Request a Quote</a>
+							<a href="/p/limo-insurance/" class="block text-gray-200 py-2 px-8 hover:bg-[#5a0f28]">Limo Insurance</a>
+							<a href="/p/livery-insurance/" class="block text-gray-200 py-2 px-8 hover:bg-[#5a0f28]">Livery Insurance</a>
+							<a href="/p/shuttle-bus-insurance/" class="block text-gray-200 py-2 px-8 hover:bg-[#5a0f28]">Shuttle Bus Insurance</a>
+							<a href="/p/non-medical-insurance/" class="block text-gray-200 py-2 px-8 hover:bg-[#5a0f28]">Non-Medical Insurance</a>
+							<a href="/p/box-truck-insurance/" class="block text-gray-200 py-2 px-8 hover:bg-[#5a0f28]">Box Truck Insurance</a>
+						</div>
+					</div>
+					
+					<!-- Mobile Dropdown 1 -->
+					{% if main_pages %}
+						<a href="{% url 'blog_list' %}" class="block text-white font-semibold py-3 px-6 hover:bg-[#7a1537]">Blog</a>
+						{% for page in main_pages %}
+							<div x-data="{ open: false }">
+								{% if page.dropdown_items.all %}
+									<button @click="open = !open" class="w-full text-left text-white font-semibold py-3 px-6 hover:bg-[#7a1537] flex justify-between items-center">
+										{{ page.title }}
+										<svg :class="{'rotate-180': open}" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+									</button>
+									<div x-show="open" x-collapse class="bg-[#6b1230]">
+										{% for item in page.dropdown_items.all %}
+											{% if item.is_active %}
+												<a href="{% if item.url %}{{ item.url }}{% else %}{{ item.get_absolute_url }}{% endif %}" class="block text-gray-200 py-2 px-8 hover:bg-[#5a0f28]">{{ item.title }}</a>
+											{% endif %}
+										{% endfor %}
+									</div>
+								{% else %}
+									{% if page.url %}
+										<a href="{{ page.url }}" class="block text-white font-semibold py-3 px-6 hover:bg-[#7a1537]">{{ page.title }}</a>
+									{% else %}
+										<a href="{{ page.get_absolute_url }}" class="block text-white font-semibold py-3 px-6 hover:bg-[#7a1537]">{{ page.title }}</a>
+									{% endif %}
+								{% endif %}
+							</div>
+						{% endfor %}
+					{% else %}
+						<!-- Mobile Dropdown 1 -->
+					<div x-data="{ open: false }">
+						<button @click="open = !open" class="w-full text-left text-white font-semibold py-3 px-6 hover:bg-[#7a1537] flex justify-between items-center">
+							Prospective Customers
+							<svg :class="{'rotate-180': open}" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+						</button>
+						<div x-show="open" x-collapse class="bg-[#6b1230]">
+							<a href="/p/request-a-quote/" class="block text-gray-200 py-2 px-8 hover:bg-[#5a0f28]">Request a Quote</a>
+							<a href="#" class="block text-gray-200 py-2 px-8 hover:bg-[#5a0f28]">Sales & Support</a>
+							<a href="#" class="block text-gray-200 py-2 px-8 hover:bg-[#5a0f28]">Definitions</a>
+							<a href="#" class="block text-gray-200 py-2 px-8 hover:bg-[#5a0f28]">Upload File</a>
+						</div>
+					</div>
+
+					<!-- Mobile Dropdown 2 -->
+					<div x-data="{ open: false }">
+						<button @click="open = !open" class="w-full text-left text-white font-semibold py-3 px-6 hover:bg-[#7a1537] flex justify-between items-center">
+							Existing Customers
+							<svg :class="{'rotate-180': open}" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+						</button>
+						<div x-show="open" x-collapse class="bg-[#6b1230]">
+							<a href="#" class="block text-gray-200 py-2 px-8 hover:bg-[#5a0f28]">Client Portal</a>
+							<a href="#" class="block text-gray-200 py-2 px-8 hover:bg-[#5a0f28]">File a Claim</a>
+							<a href="#" class="block text-gray-200 py-2 px-8 hover:bg-[#5a0f28]">Make a Payment</a>
+							<a href="#" class="block text-gray-200 py-2 px-8 hover:bg-[#5a0f28]">Policy Changes</a>
+						</div>
+					</div>
+
+					<!-- Mobile Dropdown 3 -->
+					<a href="{% url 'blog_list' %}" class="block text-white font-semibold py-3 px-6 hover:bg-[#7a1537]">Blog</a>
+					<div x-data="{ open: false }">
+						<button @click="open = !open" class="w-full text-left text-white font-semibold py-3 px-6 hover:bg-[#7a1537] flex justify-between items-center">
+							About Us
+							<svg :class="{'rotate-180': open}" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+						</button>
+						<div x-show="open" x-collapse class="bg-[#6b1230]">
+							<a href="#" class="block text-gray-200 py-2 px-8 hover:bg-[#5a0f28]">Our Story</a>
+							<a href="#" class="block text-gray-200 py-2 px-8 hover:bg-[#5a0f28]">Team</a>
+							<a href="#" class="block text-gray-200 py-2 px-8 hover:bg-[#5a0f28]">Careers</a>
+							<a href="#" class="block text-gray-200 py-2 px-8 hover:bg-[#5a0f28]">Testimonials</a>
+						</div>
+					</div>
+
+					<a href="/p/contact-us/" class="block text-white font-semibold py-3 px-6 hover:bg-[#7a1537]">Contact Us</a>
+					{% endif %}
+				</div>
+			</div>
+		</nav>
+
+		<!-- Content Block -->
+		{% block content %}
+		{% endblock %}
+
+		<footer class="mt-auto">
+			<div class="relative w-full bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=2000&q=80');">
+				<div class="absolute inset-0 bg-gradient-to-t from-[#111827] via-[#111827]/95 to-[#111827]/90"></div>
+
+				<div class="relative w-full">
+					<div class="w-full max-w-7xl mx-auto px-4 lg:px-6 py-6">
+						<div class="flex flex-col items-center justify-center gap-3 mb-4 text-center">
+							<div data-aos="fade-up" data-aos-delay="0" class="max-w-2xl">
+								<h2 class="text-xl md:text-2xl font-bold text-white mb-2">
+									Don't risk another day without coverage
+								</h2>
+								<p class="text-sm text-white max-w-lg mx-auto">
+									Get a fast, tailored quote for your taxi, shuttle, limo, or NEMT fleet and keep your business moving with confidence.
+								</p>
+							</div>
+							<div data-aos="fade-up" data-aos-delay="150">
+								<a href="/p/request-a-quote/" class="inline-flex items-center bg-[#8B183F] hover:bg-[#6b1230] text-white font-semibold text-sm tracking-wide px-6 py-2 rounded-none shadow-md transition-colors">
+									Get an Insurance Quote
+								</a>
+							</div>
+						</div>
+
+						<div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-white pt-6 border-t border-white/10">
+						<div class="space-y-4 text-left" data-aos="fade-up" data-aos-delay="0">
+					<div class="flex items-center gap-2">
+								{% if site_config and site_config.logo %}
+									<img src="{{ site_config.logo.url }}" alt="{{ site_config.site_name|default:'Quotes Insurance' }}" class="h-8 w-auto object-contain">
+								{% else %}
+									<div class="text-[#FBB03B] text-3xl font-bold">●</div>
+									<div class="text-white text-3xl font-bold tracking-tighter">
+										{% if site_config and site_config.site_name %}
+											{{ site_config.site_name }}
+										{% else %}
+											TTIS
+										{% endif %}
+									</div>
+								{% endif %}
+							</div>
+							<p class="text-sm text-white max-w-xs">
+								Oswald Taxi & Transportation Insurance Services provides specialized coverage for transportation businesses across multiple states.
+							</p>
+							<p class="text-sm text-white">
+								Phone:
+								<span class="text-white font-medium">
+									{% if site_config and site_config.phone_number %}
+										{{ site_config.phone_number }}
+									{% else %}
+										541-223-5222
+									{% endif %}
+								</span><br>
+								Email:
+								<span class="text-white font-medium">
+									{% if site_config and site_config.email %}
+										{{ site_config.email }}
+									{% else %}
+										info@ttis.com
+									{% endif %}
+								</span>
+							</p>
+							{% if site_config.facebook_url or site_config.instagram_url or site_config.twitter_url or site_config.linkedin_url or site_config.youtube_url %}
+								<div class="flex items-center gap-4 pt-4">
+									{% if site_config.facebook_url %}
+										<a href="{{ site_config.facebook_url }}" target="_blank" rel="noopener" class="text-white hover:text-[#FBB03B] transition-colors" aria-label="Facebook">
+											<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg>
+										</a>
+									{% endif %}
+									{% if site_config.instagram_url %}
+										<a href="{{ site_config.instagram_url }}" target="_blank" rel="noopener" class="text-white hover:text-[#FBB03B] transition-colors" aria-label="Instagram">
+											<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.468 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd" /></svg>
+										</a>
+									{% endif %}
+									{% if site_config.twitter_url %}
+										<a href="{{ site_config.twitter_url }}" target="_blank" rel="noopener" class="text-white hover:text-[#FBB03B] transition-colors" aria-label="Twitter">
+											<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" /></svg>
+										</a>
+									{% endif %}
+									{% if site_config.linkedin_url %}
+										<a href="{{ site_config.linkedin_url }}" target="_blank" rel="noopener" class="text-white hover:text-[#FBB03B] transition-colors" aria-label="LinkedIn">
+											<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clip-rule="evenodd" /></svg>
+										</a>
+									{% endif %}
+									{% if site_config.youtube_url %}
+										<a href="{{ site_config.youtube_url }}" target="_blank" rel="noopener" class="text-white hover:text-[#FBB03B] transition-colors" aria-label="YouTube">
+											<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M19.812 5.418c.861.23 1.538.907 1.768 1.768C21.998 8.746 22 12 22 12s0 3.255-.418 4.814a2.504 2.504 0 01-1.768 1.768c-1.56.419-7.814.419-7.814.419s-6.255 0-7.814-.419a2.505 2.505 0 01-1.768-1.768C2 15.255 2 12 2 12s0-3.254.419-4.813a2.503 2.503 0 011.768-1.768C5.744 5 11.998 5 11.998 5s6.255 0 7.814.418zM15.194 12 10 15V9l5.194 3z" clip-rule="evenodd" /></svg>
+										</a>
+									{% endif %}
+								</div>
+							{% endif %}
+						</div>
+
+						<div class="space-y-3 text-left" data-aos="fade-up" data-aos-delay="100">
+							<h3 class="text-sm font-semibold tracking-wide text-white uppercase">
+								Transport Insurance
+							</h3>
+							<div class="grid grid-cols-2 gap-x-4">
+								<ul class="space-y-1.5 text-sm">
+									<li><a href="/d/taxi-insurance/" class="hover:text-white transition-colors">Taxi Insurance</a></li>
+									<li><a href="/p/box-truck-insurance/" class="hover:text-white transition-colors">Box Truck Insurance</a></li>
+									<li><a href="/d/nemt-insurance/" class="hover:text-white transition-colors">NEMT Insurance</a></li>
+								</ul>
+								<ul class="space-y-1.5 text-sm">
+									<li><a href="/p/shuttle-bus-insurance/" class="hover:text-white transition-colors">Shuttle Bus Insurance</a></li>
+									<li><a href="/p/livery-insurance/" class="hover:text-white transition-colors">Livery Insurance</a></li>
+									<li><a href="/p/limo-insurance/" class="hover:text-white transition-colors">Limo Insurance</a></li>
+								</ul>
+							</div>
+						</div>
+
+						<div class="space-y-3 text-left" data-aos="fade-up" data-aos-delay="200">
+							<h3 class="text-sm font-semibold tracking-wide text-white uppercase">
+								Truck Insurance
+							</h3>
+							<ul class="space-y-1.5 text-sm">
+								<li><a href="/d/oregon-commercial-truck-insurance/" class="hover:text-white transition-colors">Oregon Commercial Truck Insurance</a></li>
+								<li><a href="/d/washington-commercial-truck-insurance/" class="hover:text-white transition-colors">Washington Commercial Truck Insurance</a></li>
+								<li><a href="/d/texas-commercial-truck-insurance/" class="hover:text-white transition-colors">Texas Commercial Truck Insurance</a></li>
+							</ul>
+						</div>
+					</div>
+
+						<div class="mt-2 pt-2 flex flex-col items-center justify-center gap-2 text-xs text-white text-center">
+							<p>
+								&copy; 2026 Oswald Taxi and Transportation Insurance Services. All rights reserved.
+							</p>
+							<p class="space-x-4">
+								<a href="/p/privacy-policy/" class="hover:text-white transition-colors">Privacy Policy</a>
+								<a href="/p/terms-of-use/" class="hover:text-white transition-colors">Terms of Use</a>
+							</p>
+						</div>
+					</div>
+				</div>
+
+				<button
+					x-show="scrolled"
+					x-transition.opacity.scale
+					x-cloak
+					@click="scrollToTop()"
+					class="hidden sm:flex items-center justify-center w-11 h-11 bg-[#8B183F] hover:bg-[#6b1230] text-white border border-[#FBB03B] shadow-lg cursor-pointer transition-colors duration-300 rounded-none fixed bottom-6 right-6 z-50">
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="block -translate-y-0.5">
+						<path d="M5 15l7-7 7 7"></path>
+					</svg>
+				</button>
+
+			</div>
+		</footer>
+
+	<!-- AOS Animation Script -->
+	<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+	<script>
+		AOS.init({
+			duration: 800,
+			once: true,
+			offset: 100,
+		});
+	</script>
+	</body>
+</html>

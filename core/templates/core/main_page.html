@@ -1,0 +1,237 @@
+{% extends 'core/base.html' %}
+
+{% block head_title %}
+	<title>{% if page.meta_title %}{{ page.meta_title }}{% else %}{{ page.title }}{% endif %} | {{ site_config.site_name|default:"Quotes Insurance" }}</title>
+{% endblock %}
+
+{% block head_meta %}
+	{% if page.meta_description %}
+		<meta name="description" content="{{ page.meta_description }}">
+	{% endif %}
+	{% if page.meta_keywords %}
+		<meta name="keywords" content="{{ page.meta_keywords }}">
+	{% endif %}
+	{% if page.og_image %}
+		<meta property="og:image" content="{{ page.og_image.url }}">
+	{% endif %}
+	<meta property="og:title" content="{% if page.meta_title %}{{ page.meta_title }}{% else %}{{ page.title }}{% endif %}">
+	{% if page.meta_description %}<meta property="og:description" content="{{ page.meta_description }}">{% endif %}
+{% endblock %}
+
+{% block content %}
+{% if page.hero_image %}
+<div class="relative h-[450px] w-full bg-gray-900 bg-cover bg-center" style="background-image: url('{{ page.hero_image.url }}');">
+    <div class="absolute inset-0 bg-black/60 bg-gradient-to-r from-black/80 to-transparent"></div>
+    <div class="relative z-10 h-full container mx-auto px-6 lg:px-12 flex flex-col justify-center">
+        <div class="max-w-3xl">
+            <nav class="flex text-sm text-gray-300 mb-4 uppercase tracking-wider font-semibold">
+                <a href="/" class="hover:text-white transition">Home</a>
+                <span class="mx-2">/</span>
+                <span class="text-white">{{ page.title }}</span>
+            </nav>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight drop-shadow-lg tracking-tight">
+                {% if page.hero_title %}{{ page.hero_title }}{% else %}{{ page.title }}{% endif %}
+            </h1>
+            {% if page.hero_subtitle %}
+            <p class="text-gray-200 text-lg md:text-xl max-w-2xl font-light leading-relaxed">
+                {{ page.hero_subtitle }}
+            </p>
+            {% elif page.meta_description %}
+            <p class="text-gray-200 text-lg md:text-xl max-w-2xl font-light leading-relaxed">
+                {{ page.meta_description }}
+            </p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="relative h-[450px] w-full bg-gray-900 bg-cover bg-center" style="background-image: url('{{ page.get_hero_image_url }}');">
+    <div class="absolute inset-0 bg-black/60 bg-gradient-to-r from-black/80 to-transparent"></div>
+    <div class="relative z-10 h-full container mx-auto px-6 lg:px-12 flex flex-col justify-center">
+        <div class="max-w-3xl">
+            <nav class="flex text-sm text-gray-300 mb-4 uppercase tracking-wider font-semibold">
+                <a href="/" class="hover:text-white transition">Home</a>
+                <span class="mx-2">/</span>
+                <span class="text-white">{{ page.title }}</span>
+            </nav>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight drop-shadow-lg tracking-tight">
+                {% if page.hero_title %}{{ page.hero_title }}{% else %}{{ page.title }}{% endif %}
+            </h1>
+            {% if page.hero_subtitle %}
+            <p class="text-gray-200 text-lg md:text-xl max-w-2xl font-light leading-relaxed">
+                {{ page.hero_subtitle }}
+            </p>
+            {% elif page.meta_description %}
+            <p class="text-gray-200 text-lg md:text-xl max-w-2xl font-light leading-relaxed">
+                {{ page.meta_description }}
+            </p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="container mx-auto px-6 lg:px-12 py-10">
+	<div class="max-w-6xl mx-auto space-y-10">
+		{% if page.content %}
+			{% if page.slug == 'about-us' %}
+			<div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
+				<div class="lg:col-span-2">
+					<div class="bg-white p-8 shadow-sm border border-gray-100">
+						<h2 class="text-3xl font-bold text-[#111827] mb-6 border-b-4 border-[#FBB03B] inline-block pb-2">Who We Are</h2>
+						<div class="rich-content text-lg text-gray-700 leading-relaxed space-y-6">
+							{{ page.content|safe }}
+						</div>
+					</div>
+				</div>
+				<div class="space-y-8">
+					<div class="bg-[#8B183F] text-white p-8 shadow-lg relative overflow-hidden group">
+						<div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition duration-500"></div>
+						<h3 class="text-xl font-bold mb-6 relative z-10">Why Choose OTTIS?</h3>
+						<ul class="space-y-4 relative z-10">
+							<li class="flex items-start gap-3">
+								<svg class="w-6 h-6 text-[#FBB03B] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+								<span class="font-medium text-white/90">Great Rates & Client-Focused</span>
+							</li>
+							<li class="flex items-start gap-3">
+								<svg class="w-6 h-6 text-[#FBB03B] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+								<span class="font-medium text-white/90">20+ Years Experience</span>
+							</li>
+							<li class="flex items-start gap-3">
+								<svg class="w-6 h-6 text-[#FBB03B] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+								<span class="font-medium text-white/90">Nationwide Coverage</span>
+							</li>
+							<li class="flex items-start gap-3">
+								<svg class="w-6 h-6 text-[#FBB03B] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+								<span class="font-medium text-white/90">Quick Quote Turnaround</span>
+							</li>
+						</ul>
+					</div>
+					
+					<div class="bg-gray-50 p-8 border-l-4 border-[#FBB03B] shadow-sm">
+						<h3 class="font-bold text-[#111827] mb-2 text-lg">Have Questions?</h3>
+						<p class="text-sm text-gray-600 mb-4 leading-relaxed">Our friendly sales staff is ready to help you with your application.</p>
+						<a href="tel:{{ site_config.phone_number|default:'541-223-5222' }}" class="block font-bold text-2xl text-[#8B183F] hover:text-[#6b1230] transition">{{ site_config.phone_number|default:'541-223-5222' }}</a>
+						<a href="mailto:{{ site_config.email|default:'sales@OTTIServices.com' }}" class="block text-sm font-medium text-gray-500 mt-1 hover:text-[#8B183F] transition">{{ site_config.email|default:'sales@OTTIServices.com' }}</a>
+					</div>
+				</div>
+			</div>
+			{% else %}
+			<div class="bg-white rounded-none shadow-md border border-gray-200 p-6 md:p-10 {% if page.content_width == 'default' %}max-w-5xl mx-auto{% elif page.content_width == 'wide' %}max-w-6xl mx-auto{% elif page.content_width == 'full' %}w-full{% endif %}">
+				<div class="rich-content {% if page.layout_columns == 2 %}md:columns-2 md:gap-10{% elif page.layout_columns == 3 %}md:columns-3 md:gap-10{% endif %}">
+					{{ page.content|safe }}
+				</div>
+			</div>
+			{% endif %}
+		{% endif %}
+
+		{% with items=page.dropdown_items.all %}
+		{% if items %}
+		<div class="space-y-6 pt-10 border-t border-gray-100">
+			<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
+				{% for item in items %}
+					{% if item.is_active %}
+					<a href="{% if item.url %}{{ item.url }}{% else %}{{ item.get_absolute_url }}{% endif %}" class="bg-[#333333] p-8 rounded-none shadow-md border border-transparent hover:border-white hover:shadow-lg transition-all duration-300 group flex flex-col items-center justify-center text-center min-h-[200px]">
+						<div class="text-white mb-6 transform group-hover:scale-110 transition-transform duration-300">
+							{% if item.icon_svg %}
+								<div class="w-16 h-16 mx-auto [&>svg]:w-full [&>svg]:h-full">
+									{{ item.icon_svg|safe }}
+								</div>
+							{% else %}
+								<svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+							{% endif %}
+						</div>
+						
+						<h3 class="font-bold text-lg text-white w-full uppercase tracking-wide">
+							{{ item.title }}
+						</h3>
+					</a>
+					{% endif %}
+				{% endfor %}
+			</div>
+		</div>
+		{% else %}
+			{% if page.slug == 'contact-us' %}
+			<div class="space-y-8">
+				<div class="text-center max-w-3xl mx-auto mb-10">
+					<h2 class="text-3xl font-bold text-[#111827] mb-4">Get in Touch</h2>
+					<p class="text-gray-600 text-lg">We’re here to help—reach out to the right team below for immediate assistance.</p>
+				</div>
+				
+				<div class="bg-white p-8 shadow-lg border-t-4 border-[#FBB03B]">
+					<div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 divide-y md:divide-y-0 md:divide-x divide-gray-100">
+						<!-- Sales -->
+						<div class="space-y-4 px-4">
+							<div class="flex items-center gap-3 mb-2">
+								<div class="bg-[#FBB03B]/10 p-2 rounded-full">
+									<svg class="w-6 h-6 text-[#FBB03B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+								</div>
+								<h3 class="font-bold text-xl text-[#111827]">Sales & Application</h3>
+							</div>
+							<div class="space-y-3 pl-2">
+								<p class="text-gray-600 text-sm">For new quotes and application inquiries.</p>
+								<div>
+									<p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Phone</p>
+									<a href="tel:{{ site_config.phone_number|default:'541-223-5222' }}" class="text-lg font-bold text-[#8B183F] hover:underline">{{ site_config.phone_number|default:'541-223-5222' }}</a>
+								</div>
+								<div>
+									<p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Email</p>
+									<a href="mailto:{{ site_config.email|default:'sales@ottiservices.com' }}" class="text-base font-medium text-[#8B183F] hover:underline">{{ site_config.email|default:'sales@ottiservices.com' }}</a>
+								</div>
+							</div>
+						</div>
+
+						<!-- Existing Customers -->
+						<div class="space-y-4 px-4 pt-8 md:pt-0">
+							<div class="flex items-center gap-3 mb-2">
+								<div class="bg-[#FBB03B]/10 p-2 rounded-full">
+									<svg class="w-6 h-6 text-[#FBB03B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+								</div>
+								<h3 class="font-bold text-xl text-[#111827]">Existing Customers</h3>
+							</div>
+							<div class="space-y-3 pl-2">
+								<p class="text-gray-600 text-sm">For policy changes, claims, and support.</p>
+								<div>
+									<p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Phone</p>
+									<a href="tel:{{ site_config.phone_number|default:'541-223-5222' }}" class="text-lg font-bold text-[#8B183F] hover:underline">{{ site_config.phone_number|default:'541-223-5222' }}</a>
+								</div>
+								<div>
+									<p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Email</p>
+									<a href="mailto:{{ site_config.email|default:'support@ottiservices.com' }}" class="text-base font-medium text-[#8B183F] hover:underline">{{ site_config.email|default:'support@ottiservices.com' }}</a>
+								</div>
+							</div>
+						</div>
+
+						<!-- General Info -->
+						<div class="space-y-4 px-4 pt-8 md:pt-0">
+							<div class="flex items-center gap-3 mb-2">
+								<div class="bg-[#FBB03B]/10 p-2 rounded-full">
+									<svg class="w-6 h-6 text-[#FBB03B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+								</div>
+								<h3 class="font-bold text-xl text-[#111827]">General Info</h3>
+							</div>
+							<div class="space-y-3 pl-2">
+								<div class="text-sm text-gray-700 leading-relaxed">
+									<p class="font-bold text-[#111827]">{{ site_config.site_name|default:'Oswald Taxi & Transportation Insurance Services' }}</p>
+									{% if site_config.address %}
+										<p>{{ site_config.address }}</p>
+									{% else %}
+										<p>2225 Pacific Boulevard SE, Suite 110</p>
+										<p>Albany, OR 97321</p>
+									{% endif %}
+								</div>
+								<div class="pt-2">
+									<p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Fax</p>
+									<span class="text-lg font-bold text-gray-700">541-320-7302</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% endif %}
+		{% endif %}
+		{% endwith %}
+	</div>
+</div>
+{% endblock %}

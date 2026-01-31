@@ -154,7 +154,9 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-NPM_BIN_PATH = "npm.cmd"
+import platform
+
+NPM_BIN_PATH = "npm.cmd" if platform.system() == "Windows" else "npm"
 
 # Email Configuration
 # Default to console backend for development so emails are printed to terminal
